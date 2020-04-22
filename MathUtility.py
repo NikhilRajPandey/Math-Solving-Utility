@@ -1,3 +1,4 @@
+import re
 class Frac:
     def __init__(self,numenator,denominator):
         pass
@@ -10,6 +11,34 @@ class Frac:
     def convert_into_mix_fraction(self):
         pass
 
+class Algebra:
+    def make_readable(self):
+        # This Function will remove the space from equation and add '+' symbol if a number to positive number like 4x + 5 = +4x + 5
+        output_equation = [] # It will be splited by the + and - characters
+
+        if self.equation[0] != '+' or self.equation[0] != '-': # Conv of 4x into +4x
+            self.equation = '+' + self.equation
+
+        for char in self.equation: 
+            # Removing all the whitespace char
+            if char != ' ':
+                output_equation.append(char)
+        
+        start_spliting = False
+        term = [] # Temporary term storing value
+        output_equ = [] # Output of these for loop will stored this in var
+        for var in output_equation:
+            if var == '+' or var == '-':
+                output_equ.append(term)
+                term = []
+            term.append(var)
+        
+    def __init__(self,equation,output=0):
+        """Here 0 means the value is auto and 1 means only rational or irrational and 2 for decimals
+        """
+        self.equation = equation
+        self.make_readable()
+         
 class Calc:
     # In any Function of this class numbers arg will always be a list
     @classmethod
@@ -135,10 +164,7 @@ class Calc:
 
     @classmethod
     def lcm(cls,numbers):
-        all_number_product = 1
-        for num in numbers:
-            all_number_product = all_number_product * num
-        # lcm(a1,a2,a...) * hcf(a1,a2,a...) = a1*a2*a...
+        
         return cls.divide(all_number_product,cls.hcf(numbers))[0]
 
     @classmethod
@@ -155,7 +181,11 @@ class Calc:
 
     @classmethod
     def is_perfect_square(cls,number):
-        pass
+        """This Function is only made for natural number"""
+        square_reminder = cls.square_root(number)
+        if square_reminder[1] == 0:
+            return True
+        return False
 
     @classmethod
     def square_root(cls,number,decimal_level=0):
@@ -239,10 +269,6 @@ class Calc:
         return [cls.convInNumber(result_array),reminder]
 
     @classmethod
-    def cube_root(cls,number): # Only for perfect cubes
-        pass
-
-    @classmethod
     def factors(cls,number):
         return_list = []
         # Cls.square_root_number function will return nearest square root Exp. sqrt(226) = 15
@@ -268,6 +294,28 @@ class Calc:
             return True
         return False
 
+    @classmethod
+    def uniqueSubset(cls,arr,length):
+        """This function is different by subset code becuase it will 
+        not give both subarrays like [2,1],[1,2]"""
+        arr_copy = arr.copy() # To Maniuplate these array items
+        subarray = []
+        if length == 1:
+            for item in arr:
+                subarray.append([item])
+            return subarray
+        else:
+            for item in arr_copy:
+                # Deleting all the previous item otherwise they will not give unique
+                if arr != []:
+                    del arr[0]
+                # For more information debug this code
+                recursion_call = cls.uniqueSubset(arr,length-1)
+                # arr = arr_copy.copy()
+                for recursion_item in recursion_call:
+                    recursion_item.insert(0,item)
+                    subarray.append(recursion_item)
+        return subarray
 
 if __name__ == "__main__":
     # test_case = Calc.divide(12,0)
@@ -282,5 +330,9 @@ if __name__ == "__main__":
     # print(Calc.multiples(5,6))
     # print(Calc.square_root(316))
     # print(Calc.factors(225))
-    print(Calc.square_root(112,decimal_level=3))
+    # print(Calc.square_root(112,decimal_level=3))
+    # print(Calc.is_perfect_square(36))
+    equation = Algebra("4x+ 5")
+    print(Calc.uniqueSubset(list(range(6)),6))
+    
     
